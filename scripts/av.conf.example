@@ -1,0 +1,3 @@
+# Audio device names — edit to match your hardware (check with: SwitchAudioSource -a)
+AUDIO_OUTPUT="Your Audio Output Device"
+AUDIO_INPUT="Your Audio Input Device"

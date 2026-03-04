@@ -8,6 +8,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DISPLAYPLACER=/opt/homebrew/bin/displayplacer
 
+if [[ $# -gt 0 ]]; then
+  exec "$SCRIPT_DIR/capture-profile.sh" "$@"
+fi
+
 if [[ ! -x "$DISPLAYPLACER" ]]; then
   echo "ERROR: displayplacer not found at $DISPLAYPLACER. Run brew install displayplacer." >&2
   exit 1
@@ -25,7 +29,13 @@ fi
 echo "Detected command:"
 echo "  $DISPLAY_CMD"
 
-mkdir -p "$SCRIPT_DIR/profiles/home"
+HOME_PROFILE_DIR="$SCRIPT_DIR/profiles/home"
+if [[ -d "$HOME_PROFILE_DIR" ]] && [[ -n "$(ls -A "$HOME_PROFILE_DIR" 2>/dev/null)" ]]; then
+  TS=$(date '+%Y%m%d-%H%M%S')
+  cp -r "$HOME_PROFILE_DIR" "$SCRIPT_DIR/profiles/home.bak.$TS"
+  echo "Previous home profile backed up to profiles/home.bak.$TS"
+fi
+mkdir -p "$HOME_PROFILE_DIR"
 
 # Extract each quoted display arg onto its own line (strips surrounding quotes)
 DISPLAY_ARGS_FILE="$SCRIPT_DIR/profiles/home/display.args"

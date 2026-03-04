@@ -49,6 +49,11 @@ if [[ ! -x "$DISPLAYPLACER" ]]; then
 fi
 
 PROFILE_DIR="$SCRIPT_DIR/profiles/$PROFILE_NAME"
+if [[ -d "$PROFILE_DIR" ]] && [[ -n "$(ls -A "$PROFILE_DIR" 2>/dev/null)" ]]; then
+  TS=$(date '+%Y%m%d-%H%M%S')
+  cp -r "$PROFILE_DIR" "$SCRIPT_DIR/profiles/${PROFILE_NAME}.bak.$TS"
+  echo "Previous profile '$PROFILE_NAME' backed up to profiles/${PROFILE_NAME}.bak.$TS"
+fi
 mkdir -p "$PROFILE_DIR"
 
 echo "Capturing display info..."
